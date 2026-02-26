@@ -3,6 +3,9 @@ import Galaxy from "./components/Galaxy";
 import gsap from 'gsap';
 import { ScrollTrigger, SplitText} from "gsap/all";
 
+import {DownloadIcon} from "@/components/icons/lucide-download.jsx";
+import {ExternalLinkIcon} from "@/components/icons/lucide-external-link.jsx";
+
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const App = () => {
@@ -25,16 +28,20 @@ const App = () => {
                     speed={0.7}
                 />
             </div>
+
             {/* Navbar */}
             <nav className="fixed w-full z-20 flex justify-between items-center h-32">
-                {/*FIX HERE THE BUTTON HAS INSANE PADDING */}
-                <button onClick={ () => window.scrollTo({top:0, behavior: "smooth"})}
-                        className="cursor-pointer"
+                {/* Left Side */}
+                <button
+                    type="button"
+                    onClick={ () => window.scrollTo({top:0, behavior: "smooth"})}
+                    className="ml-4 lg:ml-10 cursor-pointer"
                 >
-                    <img src="/logo.png" alt="logo" className="h-32 w-32"/>
+                    <img src="/logo.png" alt="logo" className="h-12 w-14 md:h-14 md:w-16"/>
                 </button>
 
-                <div className="p-4 backdrop-blur-md rounded-4xl border border-amber-200 shadow-[0_0_15px_rgba(252,211,77,0.8)]">
+                {/* Middle */}
+                <div className="p-3 md:p-4 backdrop-blur-md rounded-4xl border border-amber-200 shadow-[0_0_15px_rgba(252,211,77,0.8)]">
                     <ul className="flex gap-4 text-xl">
                         <li><button className="btn-neon-amber">About</button></li>
                         <li><button className="btn-neon-amber">Skills</button></li>
@@ -44,8 +51,18 @@ const App = () => {
                     </ul>
                 </div>
 
-                <div>
-                    check
+                {/* Right side*/}
+                <div className="flex justify-center items-center gap-4 text-xl mr-4 lg:mr-10">
+                    <button className="hidden lg:inline-flex cursor-pointer hover:text-amber-300">
+                        <span className="mr-2">Blog</span>
+                        <ExternalLinkIcon className="w-5 h-5" />
+                    </button>
+                    <button
+                        type="button"
+                        className="btn-primary">
+                        <span className="hidden md:inline-flex md:font-bold md:text-md">CV</span>
+                        <DownloadIcon className="w-6 h-6"/>
+                    </button>
                 </div>
             </nav>
         </>
