@@ -134,6 +134,29 @@ const App = () => {
                     </div>
                 </div>
             </section>
+            <section>
+                <div id="about" className="flex flex-col items-center justify-center gap-4 h-full relative overflow-hidden pb-20 py-20 z-20">
+                    <div className="flex flex-col justify-around flex-wrap items-center max-w-[900px] w-full px-5">
+                        <div className="w-full text-center">
+                            <h1 className="text-[40px] lg:text-[55px]  font-semibold text-transparent bg-clip-text bg-linear-to-r from-amber-500 to-cyan-500 py-5">About Me</h1>
+                            <p className="text-gray-300 text-xl sm:text-2xl leading-relaxed max-w-3xl mx-auto">
+                                I’m a <span className="text-white font-medium">Software Engineer</span> with a <span className="text-white font-medium">Computer Science degree</span> from DIPAE, building scalable digital products across the full stack.
+                                <br/>
+                                <br/>
+                                I work with <span className="text-amber-200 font-medium">React</span> and <span className="text-amber-200 font-medium">Next.js</span> on the front end, <span className="text-amber-200 font-medium">Node.js</span>, <span className="text-amber-200 font-medium">Express</span>, and <span className="text-amber-200 font-medium">MongoDB</span> on the back end and I enjoy shaping systems that are <span className="text-amber-200 font-medium">fast</span>, <span className="text-amber-200 font-medium">secure</span>, and easy to extend.
+                                <br/>
+                                <br/>
+                                My experience includes <span className="text-white font-medium">REST API design</span>, <span className="text-white font-medium">TypeScript</span> development, and project structures that support real‑world growth.
+                                <br/>
+                                <br/>
+                                I’ve also worked with <span className="text-amber-200 font-medium">Java</span> and <span className="text-amber-200 font-medium">Python</span> during my studies, giving me a strong foundation in algorithms, problem‑solving, and software architecture.
+                                <br/>
+                                <br/>
+                                I’m driven by learning, improving, and building software that actually solves problems—and I’m always excited for new challenges and opportunities.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </>
     )
 }
