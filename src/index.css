@@ -65,6 +65,9 @@
   * {
     @apply border-border outline-ring/50;
   }
+  ::selection {
+    background: rgba(252, 211, 77, 0.3);
+  }
 }
 
 @utility galaxy-container {
