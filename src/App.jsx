@@ -12,6 +12,9 @@ import {LinkedinIcon} from "@/components/icons/lucide-linkedin.jsx";
 import {TwitterIcon} from "@/components/icons/lucide-twitter.jsx";
 import Cube from "@/components/HeroModels/Cube.jsx";
 import {useLayoutEffect, useRef} from "react";
+import Stackbox from "@/components/Stackbox.jsx";
+import { stack } from "@/constants/stack.js";
+import {StackIcon} from "@/components/icons/lucide-stack.jsx";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -117,7 +120,7 @@ const App = () => {
 
                 {/* Right side*/}
                 <div className="flex justify-center items-center gap-4 text-xl mr-4 lg:mr-10">
-                    <button className="hidden lg:inline-flex cursor-pointer hover:text-amber-300">
+                    <button className="hidden xl:inline-flex cursor-pointer hover:text-amber-300">
                         <span className="mr-2">Blog</span>
                         <ExternalLinkIcon className="w-5 h-5" />
                     </button>
@@ -217,6 +220,21 @@ const App = () => {
                         </div>
                     </div>
                 </div>
+            </section>
+            {/* Current Stack Section*/}
+            <section ref={snapStackRef} className="w-full">
+                <div className="flex flex-col items-center justify-center mb-10 mt-10 w-full px-5">
+                    <div className="flex items-center gap-2 mb-6">
+                        <StackIcon className="w-12 h-12"/>
+                        <h1 className="text-[40px] lg:text-[55px]  font-semibold text-transparent bg-clip-text bg-linear-to-r from-amber-500 to-cyan-500 py-5">Current Stack</h1>
+                    </div>
+                    <div id="stack" className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 max-w-[900px] xl:max-w-[1440px] 2xl:max-w-[1660px] w-full">
+                        {stack.map((item) => (
+                            <Stackbox key={item.name} name={item.name} icon={item.icon}></Stackbox>
+                        ))}
+                    </div>
+                </div>
+
             </section>
         </>
     )

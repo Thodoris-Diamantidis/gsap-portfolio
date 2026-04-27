@@ -19,12 +19,12 @@ const Cube = () => {
             <directionalLight position={[-5, -5, -5]} intensity={1.2} />
 
             {/*rim light*/}
-            <directionalLight position={[0, 6, -6]} intensity={1.0} />
+            <directionalLight position={[0, 6, -6]} intensity={2.0} />
 
             <OrbitControls
             enablePan={false}
             enableZoom={!isTablet}
-            maxDistance={20}
+            maxDistance={10}
             minDistance={5}/>
 
             <Rubiks_cube rotation={[-0.35, Math.PI /4, 0]}/>
