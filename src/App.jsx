@@ -1,22 +1,23 @@
 import Galaxy from "./components/Galaxy";
 
 import gsap from 'gsap';
-import { ScrollTrigger, SplitText} from "gsap/all";
 
 import {DownloadIcon} from "@/components/icons/lucide-download.jsx";
 import {ExternalLinkIcon} from "@/components/icons/lucide-external-link.jsx";
-import {GithubIcon} from "@/components/icons/lucide-github.jsx";
-import {FacebookIcon} from "@/components/icons/lucide-facebook.jsx";
-import {InstagramIcon} from "@/components/icons/lucide-instagram.jsx";
-import {LinkedinIcon} from "@/components/icons/lucide-linkedin.jsx";
-import {TwitterIcon} from "@/components/icons/lucide-twitter.jsx";
-import Cube from "@/components/HeroModels/Cube.jsx";
-import {useLayoutEffect, useRef} from "react";
-import Stackbox from "@/components/Stackbox.jsx";
+import {lazy, Suspense, useLayoutEffect, useRef, useState} from "react";
+import StackBox from "@/components/Stackbox.jsx";
 import { stack } from "@/constants/stack.js";
+import { blogUrl, cvUrl, navLinks, socials } from "@/constants/navigation.js";
 import {StackIcon} from "@/components/icons/lucide-stack.jsx";
+import ExperienceCard from "@/components/ExperienceCard.jsx";
+import { experience } from "@/constants/experience.js";
+import ProjectShowcase from "@/components/ProjectShowcase.jsx";
+import { projects } from "@/constants/projects.js";
 
-gsap.registerPlugin(ScrollTrigger, SplitText);
+// three.js is most of the bundle; loading it separately lets the hero text paint first.
+const Cube = lazy(() => import("@/components/HeroModels/Cube.jsx"));
+
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const App = () => {
     // Hero section Loading Refs
@@ -27,62 +28,32 @@ const App = () => {
     const buttonsRef = useRef(null);
     const cubeRef = useRef(null);
 
-    // SNAP ref:
-    const snapHeroRef = useRef(null);
-    const snapAboutMeRef = useRef(null);
-    const snapStackRef = useRef(null);
+    //Tab:
+    const [activeTab, setActiveTab] = useState("software");
 
     useLayoutEffect(() => {
-        const ctx = gsap.context(() => {
-            const tl = gsap.timeline({defaults: {ease: "power3.out"}})
-            tl.from(socialRef.current, {
-                autoAlpha: 0,
-                x: -200,
-                duration: 1,
-                ease: "power3.out",
-            })
-                .from(titleRef.current, {
-                autoAlpha: 0,
-                x: -150,
-                duration: 1,
-                ease: "power3.out",
-            }, "-=0.8")
-                .from(subtitleRef.current, {
-                    autoAlpha: 0,
-                    x: -150,
-                    duration: 1,
-                    ease: "power3.out",
-                }, "-=0.7")
-                .from(paragraphRef.current, {
-                    autoAlpha: 0,
-                    x: -100,
-                    duration: 1,
-                    ease: "power3.out",
-                }, "-=0.7")
-                .from(buttonsRef.current, {
-                    autoAlpha: 0,
-                    x: -150,
-                    duration: 1,
-                    ease: "power3.out",
-                }, "-=0.7")
-                .from(cubeRef.current, {
-                    autoAlpha: 0,
-                    x: 200,
-                    duration: 2,
-                    ease: "power3.out",
-                }, "-=1")
+        const mm = gsap.matchMedia();
+        mm.add("(prefers-reduced-motion: no-preference)", () => {
+            gsap.timeline({defaults: {autoAlpha: 0, duration: 0.9, ease: "power3.out"}})
+                .from(socialRef.current, {x: -80})
+                .from(titleRef.current, {x: -60}, "-=0.7")
+                .from(subtitleRef.current, {x: -60}, "-=0.7")
+                .from(paragraphRef.current, {x: -40}, "-=0.7")
+                .from(buttonsRef.current, {x: -40}, "-=0.7")
+                .from(cubeRef.current, {x: 120, duration: 1.6}, 0.3);
         });
 
-        return () => ctx.revert();
+        return () => mm.revert();
     }, []);
 
     return (
         <>
             {/* Background Galaxy*/}
-            <div className="fixed inset-0 -z-10">
+            <div className="fixed inset-0 -z-10" aria-hidden="true">
                 <Galaxy
                     mouseRepulsion
-                    mouseInteraction
+                    mouseInteraction={!prefersReducedMotion}
+                    disableAnimation={prefersReducedMotion}
                     density={2}
                     glowIntensity={0.2}
                     saturation={0.1}
@@ -97,145 +68,156 @@ const App = () => {
             </div>
 
             {/* Navbar */}
-            <nav className="fixed w-full z-50 flex justify-between items-center h-32">
+            <nav aria-label="Primary" className="fixed w-full z-50 flex justify-between items-center gap-2 h-24 lg:h-32 px-3 lg:px-10">
                 {/* Left Side */}
-                <button
-                    type="button"
-                    onClick={ () => window.scrollTo({top:0, behavior: "smooth"})}
-                    className="ml-4 lg:ml-10 cursor-pointer"
-                >
-                    <img src="/logo.png" alt="logo" className="h-12 w-14 md:h-14 md:w-16"/>
-                </button>
+                <a href="#hero" aria-label="Back to top" className="shrink-0">
+                    <img src="/logo.png" alt="" className="h-10 w-12 md:h-14 md:w-16"/>
+                </a>
 
                 {/* Middle */}
-                <div className="p-3 md:p-4 backdrop-blur-md rounded-4xl border border-amber-200 shadow-[0_0_15px_rgba(252,211,77,0.8)]">
-                    <ul className="flex gap-4 text-xl">
-                        <li><button className="btn-neon-amber">About</button></li>
-                        <li><button className="btn-neon-amber">Skills</button></li>
-                        <li className="hidden md:inline-flex"><button className="btn-neon-amber">Experience</button></li>
-                        <li className="hidden md:inline-flex"><button className="btn-neon-amber">Projects</button></li>
-                        <li><button className="btn-neon-amber">Contact</button></li>
+                <div className="p-2 md:p-4 backdrop-blur-md rounded-4xl border border-amber-200 shadow-[0_0_15px_rgba(252,211,77,0.8)]">
+                    <ul className="flex gap-1 md:gap-4 text-base md:text-xl">
+                        {navLinks.map(({label, href, mobile}) => (
+                            <li key={href} className={mobile ? undefined : "hidden md:inline-flex"}>
+                                <a href={href} className="btn-neon-amber">{label}</a>
+                            </li>
+                        ))}
                     </ul>
                 </div>
 
                 {/* Right side*/}
-                <div className="flex justify-center items-center gap-4 text-xl mr-4 lg:mr-10">
-                    <button className="hidden xl:inline-flex cursor-pointer hover:text-amber-300">
-                        <span className="mr-2">Blog</span>
-                        <ExternalLinkIcon className="w-5 h-5" />
-                    </button>
-                    <button
-                        type="button"
-                        className="btn-primary">
-                        <span className="hidden md:inline-flex md:font-bold md:text-md">CV</span>
-                        <DownloadIcon className="w-6 h-6"/>
-                    </button>
+                <div className="flex justify-center items-center gap-4 text-xl shrink-0">
+                    {blogUrl && (
+                        <a href={blogUrl}
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           className="hidden xl:inline-flex items-center hover:text-amber-300 focus-visible:text-amber-300 transition-colors">
+                            <span className="mr-2">Blog</span>
+                            <ExternalLinkIcon className="w-5 h-5" aria-hidden="true" />
+                        </a>
+                    )}
+                    <a href={cvUrl}
+                       download
+                       aria-label="Download CV (PDF)"
+                       className="btn-primary">
+                        <span className="hidden md:inline-flex md:font-bold md:text-md" aria-hidden="true">CV</span>
+                        <DownloadIcon className="w-5 h-5 md:w-6 md:h-6" aria-hidden="true"/>
+                    </a>
                 </div>
             </nav>
 
             {/* Hero Section*/}
-            <section ref={snapHeroRef} className="w-full">
-                <div id="Hero" className="relative flex flex-col xl:flex-row h-screen w-full items-center justify-center lg:justify-between z-20 px-3 lg:px-10 overflow-hidden">
-                    <div ref={socialRef} className="hidden xl:flex flex-col gap-6 border px-5 py-10 rounded-full border-amber-300/70 bg-amber-300/10 shadow-lg shadow-amber-300/30">
-                        <a className="btn-hero"
+            <section id="hero" className="relative flex flex-col xl:flex-row min-h-svh w-full items-center justify-center xl:justify-between gap-10 xl:gap-0 z-20 px-5 lg:px-10 pt-28 lg:pt-36 pb-12 overflow-hidden">
+                <div ref={socialRef} className="hidden xl:flex flex-col gap-6 border px-5 py-10 rounded-full border-amber-300/70 bg-amber-300/10 shadow-lg shadow-amber-300/30">
+                    {socials.map(({name, href, icon: Icon}) => (
+                        <a key={name}
+                           className="btn-hero"
+                           href={href || undefined}
                            target="_blank"
                            rel="noopener noreferrer"
-                            href="https://github.com/Thodoris-Diamantidis"
+                           aria-label={name}
                         >
-                            <GithubIcon className='w-9 h-9'/>
+                            <Icon className='w-9 h-9' aria-hidden="true"/>
                         </a>
-                        <a className="btn-hero"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                        >
-                            <LinkedinIcon className='w-9 h-9'/>
-                        </a>
-                        <a className="btn-hero"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                        >
-                            <TwitterIcon className='w-9 h-9'/>
-                        </a>
-                        <a className="btn-hero"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                        >
-                            <FacebookIcon className='w-9 h-9'/>
-                        </a>
-                        <a className="btn-hero"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                        >
-                            <InstagramIcon className='w-9 h-9'/>
-                        </a>
+                    ))}
+                </div>
+                <div className="xl:ml-5 xl:flex-1 flex flex-col gap-6 text-center xl:text-start z-30 max-w-2xl xl:px-5">
+                    <div>
+                        <h1 ref={titleRef} className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-wider">
+                            Thodoris Diamantidis
+                        </h1>
+                        <p ref={subtitleRef} className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-balance font-semibold bg-clip-text text-transparent bg-linear-to-r from-indigo-400 via-rose-400 to-amber-400 p-2">Junior Full‑Stack Web Developer</p>
                     </div>
-                    <div className="ml-5 flex-1 flex flex-col gap-6 justify-center text-justify md:text-center lg:text-start z-30 max-w-2xl px-5 lg:px-0 xl:px-5">
-                        <div className="mt-28 text-center xl:text-left">
-                            <h1 ref={titleRef} className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-wider">
-                                Thodoris Diamantidis
-                            </h1>
-                            <h2 ref={subtitleRef} className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold bg-clip-text text-transparent bg-linear-to-r from-indigo-400 via-rose-400 to-amber-400 p-2">Software Engineer</h2>
-                        </div>
-                        <div>
-                            <p ref={paragraphRef} className="text-lg lg:text-xl xl:text-2xl my-5 max-w-150 leading-relaxed">I craft immersive digital experiences that blend engineering depth with creative clarity. As a <span className="text-transparent bg-clip-text font-bold bg-linear-to-r from-indigo-400 via-rose-400 to-amber-400 ">Full Stack Engineer</span>, I turn complex ideas into elegant, high‑performance solutions.</p>
-                        </div>
+                    <p ref={paragraphRef} className="text-lg lg:text-xl xl:text-2xl my-2 xl:my-5 max-w-150 mx-auto xl:mx-0 leading-relaxed">I build <span className="text-transparent bg-clip-text font-bold bg-linear-to-r from-indigo-400 via-rose-400 to-amber-400">full‑stack web apps</span> with React, Next.js and Node.js, from an AI‑powered financial dashboard to the booking system behind a barbershop SaaS. Running IT for a wholesale business taught me to start from the real problem, not the tech.</p>
 
-                        <div ref={buttonsRef} className="flex flex-col md:flex-row gap-4 justify-center items-center lg:justify-start">
-                            <a className="px-8 py-3 bg-linear-to-r from-rose-500 to-amber-300 text-center cursor-pointer rounded-full text-base md:text-lg font-bold hover:shadow-[0_0_30px_rgba(252,211,77,0.6)]
- transition duration-300">View Projects</a>
-                            <a className="px-8 py-3 rounded-full border border-amber-300/70 bg-amber-300/10 text-center cursor-pointer text-base font-bold">Contact Me</a>
-                        </div>
-                    </div>
-                    {/* Right 3d MODEL*/}
-                    <div ref={cubeRef} className="w-full sm:w-100 sm:h-100 lg:w-120 lg:h-120 xl:w-150 xl:h-150 flex items-center justify-center relative z-20 mb-10">
-                        <figure className="w-full h-full">
-                            <div className="w-full h-full">
-                                <Cube/>
-                            </div>
-                        </figure>
+                    <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4 justify-center items-center xl:justify-start">
+                        <a href="#projects" className="px-8 py-3 bg-linear-to-r from-rose-500 to-amber-300 text-center rounded-full text-base md:text-lg font-bold hover:shadow-[0_0_30px_rgba(252,211,77,0.6)] focus-visible:shadow-[0_0_30px_rgba(252,211,77,0.6)] transition duration-300">View Projects</a>
+                        <a href="#contact" className="px-8 py-3 rounded-full border border-amber-300/70 bg-amber-300/10 hover:bg-amber-300/20 focus-visible:bg-amber-300/20 text-center text-base font-bold transition-colors duration-300">Contact Me</a>
                     </div>
                 </div>
+                {/* Right 3d MODEL*/}
+                <div ref={cubeRef} className="w-full h-64 sm:w-100 sm:h-100 lg:w-120 lg:h-120 xl:w-150 xl:h-150 shrink-0 relative z-20">
+                    <Suspense fallback={null}>
+                        <Cube/>
+                    </Suspense>
+                </div>
             </section>
+
             {/* About Me Section*/}
-            <section ref={snapAboutMeRef} className="w-full">
-                <div id="about" className="flex flex-col items-center justify-center gap-4 h-full relative overflow-hidden pb-20 py-20 z-20">
-                    <div className="flex flex-col justify-around flex-wrap items-center max-w-[900px] w-full px-5">
-                        <div className="w-full text-center">
-                            <h1 className="text-[40px] lg:text-[55px]  font-semibold text-transparent bg-clip-text bg-linear-to-r from-amber-500 to-cyan-500 py-5">About Me</h1>
-                            <p className="text-gray-300 text-xl sm:text-2xl leading-relaxed max-w-3xl mx-auto">
-                                I’m a <span className="text-white font-medium">Software Engineer</span> with a <span className="text-white font-medium">Computer Science degree</span> from DIPAE, building scalable digital products across the full stack.
-                                <br/>
-                                <br/>
-                                I work with <span className="text-amber-200 font-medium">React</span> and <span className="text-amber-200 font-medium">Next.js</span> on the front end, <span className="text-amber-200 font-medium">Node.js</span>, <span className="text-amber-200 font-medium">Express</span>, and <span className="text-amber-200 font-medium">MongoDB</span> on the back end and I enjoy shaping systems that are <span className="text-amber-200 font-medium">fast</span>, <span className="text-amber-200 font-medium">secure</span>, and easy to extend.
-                                <br/>
-                                <br/>
-                                My experience includes <span className="text-white font-medium">REST API design</span>, <span className="text-white font-medium">TypeScript</span> development, and project structures that support real‑world growth.
-                                <br/>
-                                <br/>
-                                I’ve also worked with <span className="text-amber-200 font-medium">Java</span> and <span className="text-amber-200 font-medium">Python</span> during my studies, giving me a strong foundation in algorithms, problem‑solving, and software architecture.
-                                <br/>
-                                <br/>
-                                I’m driven by learning, improving, and building software that actually solves problems—and I’m always excited for new challenges and opportunities.
-                            </p>
-                        </div>
-                    </div>
+            <section id="about" className="section-block">
+                <h2 className="section-title">About Me</h2>
+                <div className="max-w-3xl space-y-6 text-center text-lg sm:text-xl leading-relaxed text-gray-300">
+                    <p className="text-xl sm:text-2xl text-white">
+                        I’m a junior full‑stack web developer completing a degree in Information and Electronic Engineering at the International Hellenic University, building scalable digital products.
+                    </p>
+                    <p>
+                        I work with React and Next.js on the front end, Node.js, Express, and MongoDB on the back end, and I enjoy shaping systems that are <span className="text-amber-200 font-medium">fast</span>, <span className="text-amber-200 font-medium">secure</span>, and <span className="text-amber-200 font-medium">easy to extend</span>.
+                    </p>
+                    <p>
+                        My experience includes REST API design, TypeScript development, and project structures that support real‑world growth.
+                    </p>
+                    <p>
+                        I’ve also worked with Java and Python during my studies, giving me a strong foundation in algorithms, problem‑solving, and software architecture.
+                    </p>
+                    <p>
+                        I’m driven by learning, improving, and building software that actually solves problems—and I’m always excited for new challenges and opportunities.
+                    </p>
                 </div>
             </section>
+
             {/* Current Stack Section*/}
-            <section ref={snapStackRef} className="w-full">
-                <div className="flex flex-col items-center justify-center mb-10 mt-10 w-full px-5">
-                    <div className="flex items-center gap-2 mb-6">
-                        <StackIcon className="w-12 h-12"/>
-                        <h1 className="text-[40px] lg:text-[55px]  font-semibold text-transparent bg-clip-text bg-linear-to-r from-amber-500 to-cyan-500 py-5">Current Stack</h1>
-                    </div>
-                    <div id="stack" className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 max-w-[900px] xl:max-w-[1440px] 2xl:max-w-[1660px] w-full">
-                        {stack.map((item) => (
-                            <Stackbox key={item.name} name={item.name} icon={item.icon}></Stackbox>
-                        ))}
-                    </div>
+            <section id="stack" className="section-block">
+                <h2 className="section-title flex items-center gap-3">
+                    <StackIcon className="w-10 h-10 lg:w-12 lg:h-12 text-white" aria-hidden="true"/>
+                    Current Stack
+                </h2>
+                <ul className="grid grid-cols-3 md:grid-cols-5 gap-3 max-w-5xl w-full">
+                    {stack.map((item) => (
+                        <li key={item.name}>
+                            <StackBox name={item.name} icon={item.icon}/>
+                        </li>
+                    ))}
+                </ul>
+            </section>
+
+            {/* Experience Section*/}
+            <section id="experience" className="section-block">
+                <h2 className="section-title">Experience</h2>
+                <div className="flex items-center p-2 bg-[#0300145e] border border-[#7042f861] rounded-full mb-10 relative">
+                    <div
+                        className="absolute inset-0 w-[136px] bg-linear-to-r from-amber-500 to-cyan-500 rounded-full transition-transform duration-500 ease-in-out"
+                        style={{
+                            transform: activeTab === "software" ? "translateX(0%)" : "translateX(100%)",
+                        }}
+                    ></div>
+                    <button
+                        type="button"
+                        aria-pressed={activeTab === "software"}
+                        onClick={() => setActiveTab("software")}
+                        className="cursor-pointer relative z-10 px-8 py-2 text-sm lg:text-lg font-medium rounded-full w-32"
+                    >
+                        Software
+                    </button>
+                    <button
+                        type="button"
+                        aria-pressed={activeTab === "business"}
+                        onClick={() => setActiveTab("business")}
+                        className="cursor-pointer relative z-10 px-8 py-2 text-sm lg:text-lg font-medium rounded-full w-32"
+                    >
+                        Business
+                    </button>
                 </div>
 
+                {/*Dynamic Content Area*/}
+                <div className="w-full max-w-3xl space-y-6">
+                    {experience[activeTab].map((item) => (
+                        <ExperienceCard key={`${item.company}-${item.role}`} {...item}/>
+                    ))}
+                </div>
             </section>
+
+            {/* Projects Section*/}
+            <ProjectShowcase projects={projects}/>
         </>
     )
 }

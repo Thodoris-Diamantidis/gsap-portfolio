@@ -6,6 +6,8 @@
   ---break---
 */
 @custom-variant dark (&:is(.dark *));
+/* When the project showcase pins and scrolls sideways. Keep in sync with PINNED_QUERY in ProjectShowcase.jsx. */
+@custom-variant pinned (@media (prefers-reduced-motion: no-preference) and (min-height: 560px));
 
 /*
   Global base styles.
@@ -29,6 +31,7 @@
   @media (prefers-reduced-motion: no-preference) {
     html {
       interpolate-size: allow-keywords;
+      scroll-behavior: smooth;
     }
   }
   body {
@@ -74,21 +77,30 @@
   @apply w-full h-full relative;
 }
 
-@utility btn-neon-amber {
-  @apply inline-flex items-center cursor-pointer py-1 px-2 rounded-full;
+/* Shared section shell: one vertical rhythm for every content section, offset for the fixed nav. */
+@utility section-block {
+  @apply flex flex-col items-center w-full px-5 py-16 lg:py-24 scroll-mt-24 lg:scroll-mt-32;
+}
 
-  &:hover {
+@utility section-title {
+  @apply text-center text-[40px] lg:text-[55px] leading-tight font-semibold text-transparent bg-clip-text bg-linear-to-r from-amber-500 to-cyan-500 pb-2 mb-8 lg:mb-12;
+}
+
+@utility btn-neon-amber {
+  @apply inline-flex items-center cursor-pointer py-1 px-2 rounded-full transition duration-200;
+
+  &:hover, &:focus-visible {
     @apply bg-amber-300/40 shadow-[0_0_15px_rgba(252,211,77,0.9)] text-amber-300/90;
   }
 }
 
 @utility btn-primary {
-  @apply flex gap-2 cursor-pointer border border-amber-300/80 bg-amber-300/60  py-2 px-4 rounded-full
-  hover:bg-amber-300/80 hover:border-amber-300;
+  @apply flex items-center gap-2 cursor-pointer border border-amber-300/80 bg-amber-300/60 p-2.5 md:py-2 md:px-4 rounded-full transition-colors
+  hover:bg-amber-300/80 hover:border-amber-300 focus-visible:bg-amber-300/80 focus-visible:border-amber-300;
 }
 
 @utility btn-hero {
-  @apply hover:text-amber-300 cursor-pointer transition transform hover:scale-125;
+  @apply hover:text-amber-300 focus-visible:text-amber-300 cursor-pointer transition transform hover:scale-125 focus-visible:scale-125 motion-reduce:transform-none;
 }
 
 /*

@@ -169,9 +169,14 @@ void main() {
 }
 `;
 
+// Hoisted so the defaults keep a stable identity; inline array defaults would be new on every render
+// and, being effect deps, would tear down and rebuild the WebGL context each time the parent re-renders.
+const DEFAULT_FOCAL = [0.5, 0.5];
+const DEFAULT_ROTATION = [1.0, 0.0];
+
 export default function Galaxy({
-                                   focal = [0.5, 0.5],
-                                   rotation = [1.0, 0.0],
+                                   focal = DEFAULT_FOCAL,
+                                   rotation = DEFAULT_ROTATION,
                                    starSpeed = 0.5,
                                    density = 1,
                                    hueShift = 140,

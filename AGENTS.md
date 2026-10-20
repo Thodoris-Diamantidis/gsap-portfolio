@@ -1,60 +1,217 @@
-# AGENTS.md
+# AGENT.md
 
-This file provides guidance to WARP (warp.dev) when working with code in this repository.
+## Project Overview
 
-## Common commands
-Prereqs: Node.js + npm (repo uses `package-lock.json`).
+This is a personal portfolio website for a myself.
 
-Install deps:
-- `npm install`
+The goal is to create a memorable, premium-feeling experience that showcases:
 
-Run dev server (Vite + React Fast Refresh):
-- `npm run dev`
+- Frontend development skills
+- Web animations
+- Creative problem solving
+- Personal projects
+- Professional presentation
 
-Production build:
-- `npm run build` (outputs `dist/`)
+Avoid generic AI-generated portfolio designs.
 
-Preview the production build locally:
-- `npm run preview`
+---
 
-Lint:
-- `npm run lint`
-- Lint a single file: `npx eslint src/App.jsx` (or any path)
+## Design Principles
 
-Tests:
-- No test runner is currently configured (no `test` script in `package.json`).
+### Visual Quality
 
-## High-level architecture
-This is a small Vite + React app with a WebGL starfield background and Tailwind CSS styling.
+- Prioritize quality over quantity.
+- Every section should have a clear purpose.
+- Use strong visual hierarchy.
+- Favor whitespace and balance.
+- Avoid clutter.
 
-Entry points / rendering flow:
-- `index.html` mounts the app at `#root` and loads `src/main.jsx`.
-- `src/main.jsx` creates the React root and renders `<App />` (wrapped in `StrictMode`).
-- `src/App.jsx` is the top-level UI composition.
+### Aesthetics
 
-WebGL background (core “engine”):
-- `src/components/Galaxy.jsx` renders a full-screen starfield using OGL (a lightweight WebGL helper library).
-- The component:
-  - Creates an `ogl.Renderer` and appends its `gl.canvas` to a container div.
-  - Uses a full-screen triangle (`ogl.Triangle`) with custom `vertexShader`/`fragmentShader` strings.
-  - Drives animation via `requestAnimationFrame`, updating shader uniforms like `uTime`, `uMouse`, and `uResolution`.
-  - Handles resize and (optionally) mouse interaction/repulsion; cleans up listeners/canvas on unmount.
-- The background is mounted in `App.jsx` as a fixed, full-viewport layer (`fixed inset-0 -z-10`).
+- Modern and premium.
+- Sophisticated typography.
+- Strong contrast.
+- Subtle gradients when appropriate.
+- Avoid template-like layouts.
+- Avoid overused startup landing page patterns.
 
-Animation libraries (GSAP):
-- `src/App.jsx` imports `gsap` and registers `ScrollTrigger` and `SplitText` globally via `gsap.registerPlugin(...)`.
-- Actual timeline/trigger usage appears intended but is currently minimal; look here first when adding scroll-based animations.
+### Motion
 
-Styling (Tailwind v4):
-- Tailwind is wired through Vite via `@tailwindcss/vite` in `vite.config.js`.
-- Global styles live in `src/index.css` and start with `@import 'tailwindcss';`.
-- This codebase uses Tailwind v4’s `@utility` blocks for custom utility classes (e.g. `galaxy-container`, `btn-neon-amber`).
+- Motion must have purpose.
+- Prefer smooth, elegant transitions.
+- Use GSAP animations to guide attention.
+- Avoid excessive movement.
+- Prioritize performance.
 
-Static assets:
-- Vite serves `public/` at the site root (e.g. `public/logo.png` is referenced as `/logo.png` in `App.jsx`).
+### Animation Philosophy
 
-## Where to make common changes
-- Global layout / page sections / navigation: `src/App.jsx`
-- Starfield look/feel + performance knobs (density, glow, interaction): `src/components/Galaxy.jsx` (uniforms + shader code)
-- Design tokens / custom utilities: `src/index.css`
-- Tooling config: `vite.config.js`, `eslint.config.js`, `package.json`
+Animations should communicate intent.
+
+Use motion to:
+
+- Introduce content
+- Direct attention
+- Reveal hierarchy
+- Create delight
+
+Do not animate elements simply because animation is available.
+
+### Responsiveness
+
+- Mobile-first approach.
+- Excellent tablet experience.
+- No layout shifts.
+- Consistent spacing across breakpoints.
+
+---
+
+## Development Standards
+
+### Code Quality
+
+- Write maintainable and reusable code.
+- Prefer composition over duplication.
+- Keep components focused.
+- Remove dead code immediately.
+
+### Performance
+
+- Optimize images.
+- Minimize layout thrashing.
+- Lazy load where appropriate.
+- Maintain high Lighthouse scores.
+
+### Accessibility
+
+- Semantic HTML.
+- Keyboard navigation support.
+- Proper color contrast.
+- ARIA labels only when needed.
+
+---
+
+## Portfolio Content Strategy
+
+### About Section
+
+Focus on:
+
+- Passion for development
+- Building real projects
+- Learning mentality
+- Problem solving
+
+Avoid:
+
+- Generic buzzwords
+- Long paragraphs
+
+### Projects Section
+
+Emphasize:
+
+- Problems solved
+- Technologies used
+- Key achievements
+- Visual impact
+
+Each project should feel like a case study rather than a simple card.
+
+### Contact Section
+
+Simple and direct.
+
+Include:
+
+- GitHub
+- LinkedIn
+- Email
+
+---
+
+## Preferred Tech Stack
+
+- fill in with current stack
+
+Favor modern best practices.
+
+---
+
+## AI Decision Rules
+
+Before implementing anything, ask:
+
+1. Is this visually meaningful?
+2. Does this improve user experience?
+3. Would a professional designer approve this choice?
+4. Is there a simpler solution?
+5. Does this strengthen the personal brand?
+
+If the answer is no, rethink the implementation.
+
+---
+
+## Design Taste Rules
+
+### Avoid
+
+- Generic hero sections
+- Excessive glassmorphism
+- Random gradients
+- Stock imagery
+- Overused UI patterns
+- Generic AI portfolio aesthetics
+
+### Prefer
+
+- Strong typography
+- Interesting layouts
+- Intentional motion
+- Clean storytelling
+- Memorable interactions
+- Premium visual polish
+
+Build experiences, not pages.
+
+---
+
+## Personal Brand
+
+This portfolio should position me as a developer who:
+
+- Builds polished products, not just projects
+- Pays attention to design details
+- Understands user experience
+- Values performance and accessibility
+- Solves real-world problems
+- Continually learns and improves
+
+The portfolio should feel confident, modern, and distinctive without being flashy.
+
+---
+
+### Animation Philosophy
+
+Animations should communicate intent.
+
+Use motion to:
+- Introduce content
+- Direct attention
+- Reveal hierarchy
+- Create delight
+
+Do not animate elements simply because animation is available.
+
+---
+
+## Final Rule
+
+When making design or development decisions, choose the option that a skilled designer and senior frontend developer would be proud to showcase publicly.
+
+Every section should earn its place.
+
+Every animation should serve a purpose.
+
+Every visual element should contribute to the story.
+
+Create a memorable experience, not just another portfolio.
