@@ -19,6 +19,9 @@ export const cvUrl = "/Thodoris_Diamantidis_CV.pdf";
 // The Blog link in the nav only renders once this is set.
 export const blogUrl = "";
 
+// Contact section email. The email link and copy button only render once this is set.
+export const email = "thodoris_diamantidis@hotmail.com";
+
 // TODO: fill in the missing profile URLs before launch.
 export const socials = [
     {name: "GitHub", href: "https://github.com/Thodoris-Diamantidis", icon: GithubIcon},

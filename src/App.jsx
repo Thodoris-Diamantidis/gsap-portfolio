@@ -2,17 +2,18 @@ import Galaxy from "./components/Galaxy";
 
 import gsap from 'gsap';
 
-import {DownloadIcon} from "@/components/icons/lucide-download.jsx";
-import {ExternalLinkIcon} from "@/components/icons/lucide-external-link.jsx";
 import {lazy, Suspense, useLayoutEffect, useRef, useState} from "react";
+import Navbar from "@/components/Navbar.jsx";
 import StackBox from "@/components/Stackbox.jsx";
 import { stack } from "@/constants/stack.js";
-import { blogUrl, cvUrl, navLinks, socials } from "@/constants/navigation.js";
+import { socials } from "@/constants/navigation.js";
 import {StackIcon} from "@/components/icons/lucide-stack.jsx";
 import ExperienceCard from "@/components/ExperienceCard.jsx";
 import { experience } from "@/constants/experience.js";
 import ProjectShowcase from "@/components/ProjectShowcase.jsx";
 import { projects } from "@/constants/projects.js";
+import ContactSection from "@/components/ContactSection.jsx";
+import BackToTop from "@/components/BackToTop.jsx";
 
 // three.js is most of the bundle; loading it separately lets the hero text paint first.
 const Cube = lazy(() => import("@/components/HeroModels/Cube.jsx"));
@@ -67,44 +68,7 @@ const App = () => {
                 />
             </div>
 
-            {/* Navbar */}
-            <nav aria-label="Primary" className="fixed w-full z-50 flex justify-between items-center gap-2 h-24 lg:h-32 px-3 lg:px-10">
-                {/* Left Side */}
-                <a href="#hero" aria-label="Back to top" className="shrink-0">
-                    <img src="/logo.png" alt="" className="h-10 w-12 md:h-14 md:w-16"/>
-                </a>
-
-                {/* Middle */}
-                <div className="p-2 md:p-4 backdrop-blur-md rounded-4xl border border-amber-200 shadow-[0_0_15px_rgba(252,211,77,0.8)]">
-                    <ul className="flex gap-1 md:gap-4 text-base md:text-xl">
-                        {navLinks.map(({label, href, mobile}) => (
-                            <li key={href} className={mobile ? undefined : "hidden md:inline-flex"}>
-                                <a href={href} className="btn-neon-amber">{label}</a>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-
-                {/* Right side*/}
-                <div className="flex justify-center items-center gap-4 text-xl shrink-0">
-                    {blogUrl && (
-                        <a href={blogUrl}
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           className="hidden xl:inline-flex items-center hover:text-amber-300 focus-visible:text-amber-300 transition-colors">
-                            <span className="mr-2">Blog</span>
-                            <ExternalLinkIcon className="w-5 h-5" aria-hidden="true" />
-                        </a>
-                    )}
-                    <a href={cvUrl}
-                       download
-                       aria-label="Download CV (PDF)"
-                       className="btn-primary">
-                        <span className="hidden md:inline-flex md:font-bold md:text-md" aria-hidden="true">CV</span>
-                        <DownloadIcon className="w-5 h-5 md:w-6 md:h-6" aria-hidden="true"/>
-                    </a>
-                </div>
-            </nav>
+            <Navbar/>
 
             {/* Hero Section*/}
             <section id="hero" className="relative flex flex-col xl:flex-row min-h-svh w-full items-center justify-center xl:justify-between gap-10 xl:gap-0 z-20 px-5 lg:px-10 pt-28 lg:pt-36 pb-12 overflow-hidden">
@@ -218,6 +182,11 @@ const App = () => {
 
             {/* Projects Section*/}
             <ProjectShowcase projects={projects}/>
+
+            {/* Contact Section*/}
+            <ContactSection/>
+
+            <BackToTop/>
         </>
     )
 }
