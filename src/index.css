@@ -8,6 +8,8 @@
 @custom-variant dark (&:is(.dark *));
 /* When the project showcase pins and scrolls sideways. Keep in sync with PINNED_QUERY in ProjectShowcase.jsx. */
 @custom-variant pinned (@media (prefers-reduced-motion: no-preference) and (min-height: 560px));
+/* Pinned on a short screen (e.g. 1280x720 laptops): tighter spacing so the card still fits. */
+@custom-variant pinned-short (@media (prefers-reduced-motion: no-preference) and (min-height: 560px) and (max-height: 820px));
 
 /*
   Global base styles.

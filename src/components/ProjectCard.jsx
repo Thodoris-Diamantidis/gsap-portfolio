@@ -1,6 +1,21 @@
-function ProjectCard({index, name, label, period, summary, highlights, tech, links, note}) {
+// Display order and headings for the optional case-study fields.
+const CASE_STUDY_SECTIONS = [
+    ["challenge", "Challenge"],
+    ["solution", "Solution"],
+    ["decisions", "Key decisions"],
+    ["impact", "Impact"],
+    ["lessons", "Lessons learned"],
+];
+
+const detailHeading = "text-sm font-semibold uppercase tracking-wider text-amber-200/80";
+
+function ProjectCard({index, name, label, period, summary, upcoming, caseStudy, highlights = [], tech, links, note}) {
+    const caseStudySections = caseStudy
+        ? CASE_STUDY_SECTIONS.filter(([key]) => caseStudy[key])
+        : [];
+
     return (
-        <article className="w-full h-full grid content-start lg:content-stretch gap-8 lg:grid-cols-[2fr_3fr] lg:gap-12 p-6 lg:p-10 border border-amber-300/20 rounded-xl bg-white/[0.02]">
+        <article className="w-full h-full grid content-start lg:content-stretch gap-8 lg:grid-cols-[2fr_3fr] lg:gap-12 p-6 lg:p-10 lg:pinned-short:p-8 border border-amber-300/20 rounded-xl bg-white/[0.02]">
             {/* Overview: what it is and where to see it */}
             <div className="flex flex-col gap-3">
                 <p className="text-sm text-gray-400">
@@ -11,7 +26,14 @@ function ProjectCard({index, name, label, period, summary, highlights, tech, lin
                 {period && <p className="text-sm text-gray-400">{period}</p>}
                 <p className="text-lg text-gray-200 leading-relaxed">{summary}</p>
 
-                <div className="mt-2 lg:mt-auto lg:pt-4 flex flex-wrap gap-4">
+                <ul className="mt-2 lg:mt-auto lg:pt-4 flex flex-wrap gap-2" aria-label={`${name} tech stack`}>
+                    {tech.map((item) => (
+                        <li key={item} className="px-3 py-1 rounded-full border border-amber-300/30 bg-amber-300/10 text-sm text-amber-100">
+                            {item}
+                        </li>
+                    ))}
+                </ul>
+                <div className="mt-1 flex flex-wrap gap-4">
                     {links.map(({label: linkLabel, href, icon: Icon}) => (
                         <a key={href}
                            href={href}
@@ -27,12 +49,21 @@ function ProjectCard({index, name, label, period, summary, highlights, tech, lin
                 </div>
             </div>
 
-            {/* Detail: contribution, then stack */}
-            <div className="flex flex-col gap-6">
-                {highlights.length > 0 && (
-                    // Hidden on pinned phones: a pinned card has to fit one screen, and the summary carries the story.
-                    <div className="max-md:pinned:hidden">
-                        <h4 className="text-sm font-semibold uppercase tracking-wider text-amber-200/80">What I built</h4>
+            {/* Detail: the case study (or contribution bullets), then what's coming next.
+                Hidden on pinned phones: a pinned card has to fit one screen, and the summary carries the story. */}
+            <div className="flex flex-col gap-6 max-md:pinned:hidden">
+                {caseStudySections.length > 0 ? (
+                    <dl className="space-y-4">
+                        {caseStudySections.map(([key, heading]) => (
+                            <div key={key}>
+                                <dt className={detailHeading}>{heading}</dt>
+                                <dd className="mt-1 text-gray-300 leading-relaxed">{caseStudy[key]}</dd>
+                            </div>
+                        ))}
+                    </dl>
+                ) : highlights.length > 0 && (
+                    <div>
+                        <h4 className={detailHeading}>What I built</h4>
                         <ul className="mt-3 space-y-2 list-disc pl-5 text-gray-300 leading-relaxed marker:text-amber-300/70">
                             {highlights.map((item) => (
                                 <li key={item}>{item}</li>
@@ -40,13 +71,12 @@ function ProjectCard({index, name, label, period, summary, highlights, tech, lin
                         </ul>
                     </div>
                 )}
-                <ul className="flex flex-wrap gap-2 lg:mt-auto" aria-label={`${name} tech stack`}>
-                    {tech.map((item) => (
-                        <li key={item} className="px-3 py-1 rounded-full border border-amber-300/30 bg-amber-300/10 text-sm text-amber-100">
-                            {item}
-                        </li>
-                    ))}
-                </ul>
+                {upcoming && (
+                    <div className="p-4 rounded-lg border border-amber-300/20 bg-amber-300/5">
+                        <p className={detailHeading}>Coming next</p>
+                        <p className="mt-1 text-sm text-gray-300 leading-relaxed">{upcoming}</p>
+                    </div>
+                )}
             </div>
         </article>
     )

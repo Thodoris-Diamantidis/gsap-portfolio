@@ -80,10 +80,10 @@ function ProjectShowcase({projects}) {
         <section
             id="projects"
             ref={sectionRef}
-            className="flex flex-col items-center w-full py-16 lg:py-24 scroll-mt-24 overflow-x-clip pinned:h-svh pinned:justify-center pinned:pt-24 pinned:pb-6 lg:pinned:pt-32 lg:pinned:pb-8 pinned:scroll-mt-0"
+            className="flex flex-col items-center w-full py-16 lg:py-24 scroll-mt-24 overflow-x-clip pinned:h-svh pinned:justify-center pinned:pt-24 pinned:pb-6 lg:pinned:pt-32 lg:pinned:pb-8 lg:pinned-short:pt-28 lg:pinned-short:pb-4 pinned:scroll-mt-0"
         >
-            <h2 className="section-title">Projects</h2>
-            <div className="w-full overflow-x-auto snap-x snap-mandatory max-md:[scrollbar-width:none] max-md:[&::-webkit-scrollbar]:hidden pinned:overflow-visible pinned:snap-none [--card-w:85vw] md:[--card-w:min(80vw,64rem)]">
+            <h2 className="section-title pinned-short:text-[40px] pinned-short:pb-0 pinned-short:mb-4">Projects</h2>
+            <div className="w-full overflow-x-auto snap-x snap-mandatory max-md:[scrollbar-width:none] max-md:[&::-webkit-scrollbar]:hidden pinned:overflow-visible pinned:snap-none [--card-w:85vw] md:[--card-w:min(80vw,64rem)] lg:[--card-w:min(88vw,76rem)]">
                 <ul ref={trackRef} className="flex w-max gap-4 md:gap-8 px-[calc((100%-var(--card-w))/2)] pinned:will-change-transform">
                     {/* `relative` on each card keeps its absolutely positioned sr-only text inside the scroll container */}
                     {projects.map((project, index) => (

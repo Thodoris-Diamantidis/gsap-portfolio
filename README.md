@@ -46,6 +46,7 @@ Notes:
 - A nav link's `href` must match a section `id` (e.g. `#projects`).
 - Social links with an empty `href`, and the Blog link while `blogUrl` is empty, should be filled in before launch.
 - Projects take an optional `note` (shown instead of links, e.g. for a private codebase).
+- Projects take an optional `caseStudy` (`challenge`, `solution`, `decisions`, `impact`, `lessons`), which replaces the `highlights` bullets, and an optional `upcoming` "Coming next" note. Keep a case study to about three short paragraphs so the pinned card fits on one screen.
 
 ## Project showcase
 
@@ -56,7 +57,8 @@ Notes:
   - `SCREENS_PER_CARD`: minimum scroll per card as a fraction of screen height; sets the feel on phones.
 - **When it pins:** controlled by `PINNED_QUERY` in the component and the matching `pinned` Tailwind variant in `src/index.css`. Keep the two in sync.
 - **Fallback:** users with reduced motion enabled, and screens under 560px tall, get a native swipe carousel instead.
-- **Phones:** pinned cards hide the "What I built" bullets so each card fits on one screen.
+- **Phones:** pinned cards hide the case study, "What I built" bullets and "Coming next" note so each card fits on one screen.
+- **Short screens:** the `pinned-short` variant (720–820px tall, e.g. 1280×720 laptops) tightens spacing so cards still fit.
 
 ## Accessibility & performance
 
